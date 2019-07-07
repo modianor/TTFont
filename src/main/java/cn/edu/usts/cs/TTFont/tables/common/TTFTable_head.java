@@ -1,8 +1,5 @@
 package cn.edu.usts.cs.TTFont.tables.common;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.ParseException;
@@ -12,9 +9,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import javax.swing.Box;
-import javax.swing.JComponent;
 
-import cn.edu.usts.cs.TTFont.gui.vcontrols.VControl;
 import cn.edu.usts.cs.TTFont.table.TTFDirEntry;
 import cn.edu.usts.cs.TTFont.table.TTFTable;
 import cn.edu.usts.cs.TTFont.table.TTFTables;
@@ -132,24 +127,6 @@ public class TTFTable_head extends TTFTable {
 		return true;
 	}
 
-	@Override
-	public JComponent getView(Component c, Font f) {
-		this.setupView();
-		if (box==null) {
-			box = Box.createVerticalBox();
-			box.add(Box.createVerticalStrut(10));
-			(new VControl("unitsPerEm","unitsPerEm",this,null)).pinInto(box);
-			(new VControl("xMin","xMin for all glyphs",this,VControl.USHORT)).pinInto(box);
-			(new VControl("yMin","yMin for all glyphs",this,VControl.USHORT)).pinInto(box);
-			(new VControl("xMax","xMax for all glyphs",this,VControl.USHORT)).pinInto(box);
-			(new VControl("yMax","yMax for all glyphs",this,VControl.USHORT)).pinInto(box);
-			(new VControl("macStyle","Mac font style","STYLE_",this,VControl.USHORT)).pinInto(box);
-			view.setLayout(new FlowLayout(FlowLayout.LEADING));
-			view.add(Box.createHorizontalStrut(10));
-			view.add(box);			
-		}
-		return spanel;
-	}
 	
 	public void fixChecksum(RandomAccessFile ttf) throws IOException
 	{

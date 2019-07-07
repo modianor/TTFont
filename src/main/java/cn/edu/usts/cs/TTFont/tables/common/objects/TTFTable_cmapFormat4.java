@@ -156,7 +156,6 @@ public class TTFTable_cmapFormat4 extends TTFTable_cmapFormat {
 			os2.ulCharRange1 |= TTFTable_OS_2.UR1_LATIN_EXT_A;
 			os2.ulCodePageRange1 |= TTFTable_OS_2.MS_CP_LATIN2;
 			fixOS2(ch);
-			os2.notifyFieldChanges();
         }
 	}
 	

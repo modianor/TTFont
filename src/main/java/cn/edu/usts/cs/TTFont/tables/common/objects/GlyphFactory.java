@@ -23,9 +23,6 @@ public class GlyphFactory {
 				break;
 			}
 		}		
-		if (insert) {
-			glyfTab.insertGlyph(gl,name,f);
-		}
 		return gl;
 	}
 	
@@ -34,9 +31,6 @@ public class GlyphFactory {
 		if (glyfTab==null)
 			return null;
 		TTFTable_glyfGeneric gl = glyfTab.glyphs.get(c1).clone();
-		if (insert) {
-			glyfTab.insertGlyph(gl,name,f);
-		}
 		return gl;
 	}
 	
@@ -74,10 +68,6 @@ public class GlyphFactory {
 		
 		gl.components.add(c1);
 		gl.components.add(c2);
-			
-		if (insert) {
-			glyfTab.insertGlyph(gl,name,f);			
-		}
 		return gl;
 	}	
 }

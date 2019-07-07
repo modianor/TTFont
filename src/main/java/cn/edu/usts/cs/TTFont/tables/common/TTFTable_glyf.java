@@ -1,21 +1,10 @@
 package cn.edu.usts.cs.TTFont.tables.common;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.io.RandomAccessFile;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
-
 import cn.edu.usts.cs.TTFont.DefaultProperties;
-import cn.edu.usts.cs.TTFont.gui.GlyphBox;
-import cn.edu.usts.cs.TTFont.gui.GlyphBoxIcon;
-import cn.edu.usts.cs.TTFont.gui.GlyphEditorFrame;
 import cn.edu.usts.cs.TTFont.table.TTFTable;
 import cn.edu.usts.cs.TTFont.table.TTFTables;
 import cn.edu.usts.cs.TTFont.tables.common.objects.TTFTable_glyfGeneric;
@@ -23,13 +12,10 @@ import cn.edu.usts.cs.TTFont.tables.common.objects.TTFTable_maxpStats;
 import cn.edu.usts.cs.TTFont.util.CachedFileInput;
 import cn.edu.usts.cs.TTFont.util.Debug;
 import cn.edu.usts.cs.TTFont.util.RandomAccessInput;
-import cn.edu.usts.cs.TTFont.util.Util;
 
 public class TTFTable_glyf extends TTFTable {
 	
 	public Vector<TTFTable_glyfGeneric> glyphs = new Vector<TTFTable_glyfGeneric>();
-	private Vector<GlyphBox> glyphBoxes = new Vector<GlyphBox>();
-	private GlyphEditorFrame glyphEdit = null;
 	private Map<String,TTFTable> ttfTables = null;
 		
 	@Override
@@ -74,72 +60,7 @@ public class TTFTable_glyf extends TTFTable {
 		return true;
 	}
 
-	public void testGlyphs() throws Exception {
-		int cnt = 0;
-		for (TTFTable_glyfGeneric glf : glyphs) {
-			TTFTable_post post = (TTFTable_post) glf.getFontTables().get(TTFTables.POST);
-			post.getGlyphName(cnt);
-			GlyphBoxIcon.testDrawGlyph(glf);
-		}	
-		
-	}
-	@Override
-	public JComponent getView(Component c, Font f) {
-		if (c instanceof JPanel) {
-			try {
-				testGlyphs();				
-			}
-			catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			return null;
-		}
-		try {
-			this.setupView();
-			if (this.glyphBoxes.size()==0) {
-				
-				if (glyphEdit==null) {
-					glyphEdit = new GlyphEditorFrame(c,view);
-				}
-				view.setLayout(new GridLayout(0,DefaultProperties.GRID_X));
-				view.setBorder(new EmptyBorder(5,5,5,5));
-				int cnt=0;
-							
-				for (TTFTable_glyfGeneric glf : glyphs) {			
-					view.add(new GlyphBox(glf,glyphEdit,glyphs.size(),cnt++,f) );
-				}				
-			}
-		}
-		catch (OutOfMemoryError oom) {
-			Util.showException(oom, null, "Try to increase -Xmx JVM startup parameter!");
-		}
-		catch (Exception e) {
-			Util.showException(e, null, "Exception");
-		}
-		return this.spanel;
-	}
 	
-	public int insertGlyph(TTFTable_glyfGeneric gl, String name, Font f) {
-		try {
-			gl.fixBoundingBox();
-			glyphs.add(gl);
-			TTFTable_maxp maxp = (TTFTable_maxp) ttfTables.get(TTFTables.MAXP);
-			maxp.numGlyphs += 1;
-			TTFTable_post post = (TTFTable_post) this.ttfTables.get(TTFTables.POST);
-			post.insertGlyphName(gl.getIndex(), name);
-			TTFTable_hmtx hmtx = (TTFTable_hmtx) this.ttfTables.get(TTFTables.HMTX);
-			hmtx.insertGlyphData(gl);
-			view.add( new GlyphBox(gl,glyphEdit,glyphs.size(),view.getComponentCount(), f) );
-			SwingUtilities.updateComponentTreeUI(view);			
-		}
-		catch (OutOfMemoryError oom) {
-			Util.showException(oom, null, "Try to increase -Xmx JVM startup parameter!");
-		}
-		catch (Exception e) {
-			Util.showException(e, null, "Exception");
-		}
-		return glyphs.size()-1;
-	}
 	
 	@Override
 	public boolean writeToFile(RandomAccessFile ttf, Map<String, TTFTable> tables) throws Exception {
